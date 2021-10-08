@@ -135,6 +135,7 @@ def battle():
   battle = True
   musica.play()
   
+  attacked = False
   while battle:
     if True: # esto deberia ser health
       pygame.draw.rect(screen, (0, 0, 0), (100, 100, 600, 500))
@@ -171,14 +172,16 @@ def battle():
                 if event.key == pygame.K_a:
                     #pygame.event.wait()
                     monster.hp -= player.atk
-                    text = set_text(f"You did {player.atk} attack", 400, 500, 30)
-                    time.sleep(0.5)
-                    screen.blit(text[0], text[1])
-
+                    attacked = True
+                
                     if monster.hp <= 0:
                       musica.stop()
                       battle = False
-                    
+
+      if attacked == True:
+        text = set_text(f"You did {player.atk} attack", 400, 500, 30)
+        screen.blit(text[0], text[1])
+
       
       pygame.display.update()
 
@@ -226,9 +229,9 @@ while True:
           if event.key == pygame.K_DOWN:
               player.down_pressed = False
     
-  if (player.position) in monster_positions:
+  """if (player.position) in monster_positions:
     monster_positions.pop()
-    menu()
+    menu()"""
     #NO FUNCIONAAAAA
         
   #print((player.position)) #esta no es la pocision real, es relativa a donde partio (150, 100)
