@@ -1,0 +1,4 @@
+1. controlar el volumen
+2. tener un menu de opciones
+3. tener un menu princial
+4. cutscene

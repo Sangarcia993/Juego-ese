@@ -2,13 +2,10 @@ import pygame, sys, time, random
 from battle_func import battle
 from pygame.locals import *
 
+#creo que esto no es necesario
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 pygame.mixer.set_num_channels(32)
-
-musica = pygame.mixer.Sound("sonidos/musica2.ogg")
-fireball = pygame.mixer.Sound("sonidos/Fireball.wav")
-sword_hit = pygame.mixer.Sound("sonidos/Sword hit.wav")
 
 
 pygame.display.set_caption('game base')
@@ -69,7 +66,7 @@ class Player():
         self.scrolly = 0
         self.death = False
 
-        self.hp = 10
+        self.hp = 100
         self.atk = 3
 
     def draw(self, screen):
@@ -139,91 +136,93 @@ def menu():
 
 print(map_data)
 while True:
-  display.fill((0,0,0))
+    display.fill((0,0,0))
 
-  for y, row in enumerate(map_data):
-      for x, tile in enumerate(row):
-          if tile == 1:
-              #pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
-              display.blit(grass_img, (150 + x * 10 - y * 10 + player.scrollx, -390 + x * 5 + y * 5 + player.scrolly))
-              if player.scrollx > 200:
-                  player.scrollx = -400
-              elif player.scrollx < -400:
-                  player.scrollx = 200
-              elif player.scrolly > 300:
-                  player.scrolly = -200
-              elif player.scrolly < -200:
-                  player.scrolly = 300
+    for y, row in enumerate(map_data):
+        for x, tile in enumerate(row):
+            if tile == 1:
+                #pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
+                display.blit(grass_img, (150 + x * 10 - y * 10 + player.scrollx, -390 + x * 5 + y * 5 + player.scrolly))
+                if player.scrollx > 200:
+                    player.scrollx = -400
+                elif player.scrollx < -400:
+                    player.scrollx = 200
+                elif player.scrolly > 300:
+                    player.scrolly = -200
+                elif player.scrolly < -200:
+                    player.scrolly = 300
 
-  for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-          pygame.quit()
-          sys.exit()
-      if event.type == pygame.KEYDOWN:
-          if event.key == pygame.K_LEFT:
-              player.left_pressed = True
-          if event.key == pygame.K_RIGHT:
-              player.right_pressed = True
-          if event.key == pygame.K_UP:
-              player.up_pressed = True
-          if event.key == pygame.K_DOWN:
-              player.down_pressed = True
-          if event.key == pygame.K_e:
-              menu()
-      if event.type == pygame.KEYUP:
-          if event.key == pygame.K_LEFT:
-              player.left_pressed = False
-          if event.key == pygame.K_RIGHT:
-              player.right_pressed = False
-          if event.key == pygame.K_UP:
-              player.up_pressed = False
-          if event.key == pygame.K_DOWN:
-              player.down_pressed = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player.left_pressed = True
+            if event.key == pygame.K_RIGHT:
+                player.right_pressed = True
+            if event.key == pygame.K_UP:
+                player.up_pressed = True
+            if event.key == pygame.K_DOWN:
+                player.down_pressed = True
+            if event.key == pygame.K_e:
+                menu()
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                player.left_pressed = False
+            if event.key == pygame.K_RIGHT:
+                player.right_pressed = False
+            if event.key == pygame.K_UP:
+                player.up_pressed = False
+            if event.key == pygame.K_DOWN:
+                player.down_pressed = False
     
-  """if (player.position) in monster_positions:
-    monster_positions.pop()
-    menu()"""
-    #NO FUNCIONAAAAA
-        
-  #print((player.position)) #esta no es la pocision real, es relativa a donde partio (150, 100)
+    """if (player.position) in monster_positions:
+        monster_positions.pop()
+        menu()"""
+        #NO FUNCIONAAAAA
+            
+    #print((player.position)) #esta no es la pocision real, es relativa a donde partio (150, 100)
 
-  #print(player.scrollx, player.scrolly)
+    #print(player.scrollx, player.scrolly)
 
-  x = 0    
-  if x == random.randint(0, 100):
-    player.left_pressed = False
-    player.right_pressed = False
-    player.up_pressed = False
-    player.down_pressed = False
-    battle(musica, Monster, screen, player)
+    x = 0    
+    if x == random.randint(0, 1):
+        player.left_pressed = False
+        player.right_pressed = False
+        player.up_pressed = False
+        player.down_pressed = False
+        battle(Monster, screen, player)
     
+    if player.death == True:
+        break
 
-  #print(pygame.time.get_ticks())
-  player.draw(screen)
-  player.update()
-  pygame.display.flip() #porque????????????????????????????????????
+    #print(pygame.time.get_ticks())
+    player.draw(screen)
+    player.update()
+    pygame.display.flip() #porque????????????????????????????????????
 
-  clock.tick(120) #porque????????????????????????????????????
+    clock.tick(120) #porque????????????????????????????????????
 
-  screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
-  pygame.display.update()
-  #time.sleep(1)
+    screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
+    pygame.display.update()
+    #time.sleep(1)
 
 while player.death == True:
-  display.fill((0,0,0))
+    display.fill((0,0,0))
 
-  text = set_text(f"You died", 150, 100, 40)
-  display.blit(text[0], text[1])
+    text = set_text(f"You died", 150, 100, 40)
+    display.blit(text[0], text[1])
 
-  for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-          pygame.quit()
-          sys.exit()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
-  clock.tick(120)
+    clock.tick(120)
 
-  player.draw(screen)
-  player.update()
-  pygame.display.flip()
-  screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
-  pygame.display.update()
+    player.draw(screen)
+    player.update()
+    pygame.display.flip()
+    screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
+    pygame.display.update()
