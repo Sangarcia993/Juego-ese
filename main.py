@@ -1,4 +1,5 @@
 import pygame, sys, time, random
+from battle_func import battle
 from pygame.locals import *
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -45,7 +46,7 @@ def set_text(string, coordx, coordy, fontSize): #Function to set text
 clock = pygame.time.Clock()
 encounters = pygame.time.Clock()
 
-monster_positions = [(4,0)]
+#monster_positions = [(4,0)]
 
 class Player():
     def __init__(self, x, y) -> None:
@@ -63,8 +64,9 @@ class Player():
         self.speed = 4
         self.scrollx = 0
         self.scrolly = 0
+        self.death = False
 
-        self.hp = 0
+        self.hp = 10
         self.atk = 3
 
     def draw(self, screen):
@@ -99,8 +101,8 @@ player = Player(0, 0)
 class Monster():
     def __init__(self) -> None:
         self.hp = 10
+        self.atk = 2
 
-monster = Monster()
 
 def menu():
     menu1 = True
@@ -131,63 +133,12 @@ def menu():
         pygame.display.update()
         #clock.tick(60)
 
-def battle():
-  battle = True
-  musica.play()
-  
-  attacked = False
-  while battle:
-    if True: # esto deberia ser health
-      pygame.draw.rect(screen, (0, 0, 0), (100, 100, 600, 500))
-
-      knight = pygame.image.load("knight.png")
-      knight.set_colorkey((255, 255, 255))
-      new_knight = pygame.transform.scale(knight, (100, 100))
-      screen.blit(new_knight, (150, 200))
-
-      skeleton = pygame.image.load("skeleton.png")
-      skeleton.set_colorkey((255, 255, 255))
-      skeleton = pygame.transform.scale(skeleton, (100, 100))
-      screen.blit(skeleton, (550, 200))
-
-      #anouncment
-      text = set_text("You have encountered an enemy", 400, 150, 30)
-      screen.blit(text[0], text[1])
 
 
-      #controls
-      text = set_text("What will you do?", 400, 350, 30)
-      screen.blit(text[0], text[1])
 
-      text = set_text("[a]ttack?", 400, 400, 30)
-      screen.blit(text[0], text[1])
+#print(map_data)
 
-      for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    #pygame.event.wait()
-                    musica.stop()
-                    battle = False
-                
-                if event.key == pygame.K_a:
-                    #pygame.event.wait()
-                    monster.hp -= player.atk
-                    attacked = True
-                
-                    if monster.hp <= 0:
-                      musica.stop()
-                      battle = False
-
-      if attacked == True:
-        text = set_text(f"You did {player.atk} attack", 400, 500, 30)
-        screen.blit(text[0], text[1])
-
-      
-      pygame.display.update()
-
-
-print(map_data)
-while True:
+while player.death == False:
   display.fill((0,0,0))
 
   for y, row in enumerate(map_data):
@@ -239,12 +190,12 @@ while True:
   #print(player.scrollx, player.scrolly)
 
   x = 0    
-  if x == random.randint(0, 1000):
+  if x == random.randint(0, 100):
     player.left_pressed = False
     player.right_pressed = False
     player.up_pressed = False
     player.down_pressed = False
-    battle()
+    battle(musica, Monster, screen, player)
     
 
   #print(pygame.time.get_ticks())
@@ -257,3 +208,22 @@ while True:
   screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
   pygame.display.update()
   #time.sleep(1)
+
+while player.death == True:
+  display.fill((0,0,0))
+
+  text = set_text(f"You died", 150, 100, 40)
+  display.blit(text[0], text[1])
+
+  for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+          pygame.quit()
+          sys.exit()
+
+  clock.tick(120)
+
+  player.draw(screen)
+  player.update()
+  pygame.display.flip()
+  screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0)) # esta cosa esta causando problemas pero me da lata arreglarlo
+  pygame.display.update()
