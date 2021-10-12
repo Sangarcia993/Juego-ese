@@ -6,7 +6,10 @@ pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 pygame.mixer.set_num_channels(32)
 
-musica = pygame.mixer.Sound("musica2.ogg")
+musica = pygame.mixer.Sound("sonidos/musica2.ogg")
+fireball = pygame.mixer.Sound("sonidos/Fireball.wav")
+sword_hit = pygame.mixer.Sound("sonidos/Sword hit.wav")
+
 
 pygame.display.set_caption('game base')
 screen = pygame.display.set_mode((800, 800),0,32)
@@ -134,11 +137,8 @@ def menu():
         #clock.tick(60)
 
 
-
-
-#print(map_data)
-
-while player.death == False:
+print(map_data)
+while True:
   display.fill((0,0,0))
 
   for y, row in enumerate(map_data):
